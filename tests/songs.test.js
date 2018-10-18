@@ -4,31 +4,31 @@ const request = require("supertest");
 describe("routes/songs", () => {
 
   it("POST /songs should return a new song object", () => {
-    requestBody = { name: "test song", artist: "rhianna"};
-    
+    requestBody = {name: "test song", artist: "rhianna"};
+    responseBody = {id: 1, name: "test song", artist: "rhianna"};
     return request(app)
     .post("/songs")
     .send(requestBody)
     
     .then(response => {
       expect(response.status).toEqual(201);
-      expect(response.body).toMatchObject(requestBody);
+      expect(response.body).toEqual(responseBody)
     });
   });
   
-  it("GET /songs should return a non empty array", () => {
+  it("GET /songs should return an array containing one song", () => {
     return request(app)
     .get("/songs")
     
     .then(response => {
       expect(response.status).toEqual(200);
       expect(Array.isArray(response.body)).toEqual(true);
-      expect(response.body.length).toBeGreaterThan(0);
+      expect(response.body.length).toEqual(1);
     });
   });
   
   it("GET /songs/:id should return the song with id", () => {
-    expected = {id: 1, name: "test song", artist: "rhianna"};
+    responseBody = {id: 1, name: "test song", artist: "rhianna"};
     
     return request(app)
     .get("/songs/1")
@@ -36,7 +36,7 @@ describe("routes/songs", () => {
     
     .then(response => {
       expect(response.status).toEqual(200);
-      expect(response.body).toMatchObject(expected);
+      expect(response.body).toEqual(responseBody);
     });
   });
 
@@ -47,16 +47,13 @@ describe("routes/songs", () => {
     
     .then(response => {
       expect(response.status).toEqual(404);
-      expect(response.body).toMatchObject({message: 'Unable to find song with id: 10' });
+      expect(response.body).toEqual({message: 'Unable to find song with id: 10' });
     });
   });
-
-  it("PUT /songs/id should return the updated song", () => {
-    requestBody = {
-      id: 1,
-      name: "updated song",
-      artist: "rhianna"
-    };
+    
+  it("PUT /songs should return the updated song", () => {
+    requestBody = {name: "updated song", artist: "rhianna"};
+    responseBody = {id: 1, name: "updated song", artist: "rhianna"};
     
     return request(app)
     .put("/songs/1")
@@ -64,7 +61,7 @@ describe("routes/songs", () => {
     
     .then(response => {
       expect(response.status).toEqual(200);
-      expect(response.body).toMatchObject(requestBody);
+      expect(response.body).toEqual(responseBody);
     });
   });
 
@@ -74,30 +71,26 @@ describe("routes/songs", () => {
       name: "updated song",
       artist: "rhianna"
     };
-
+  
     return request(app)
     .put("/songs/10")
     .send(requestBody)
     
     .then(response => {
       expect(response.status).toEqual(404);
-      expect(response.body).toMatchObject({message: 'Unable to update song with id: 10' });
+      expect(response.body).toEqual({message: 'Unable to update song with id: 10' });
     });
   });
 
   it("DELETE /songs/:id should return the deleted song", () => {
-    const ID = 1;
-    expected = {
-      name: "updated song",
-      artist: "rhianna"
-    };
+    expected = { id: 1, name: "updated song", artist: "rhianna" };
 
     return request(app)
     .delete("/songs/1")
 
     .then(response => {
       expect(response.status).toEqual(200);
-      expect(response.body).toMatchObject(expected);
+      expect(response.body).toEqual(expected);
     })
   });
   
@@ -107,7 +100,7 @@ describe("routes/songs", () => {
     
     .then(response => {
       expect(response.status).toEqual(404);
-      expect(response.body).toMatchObject({message: 'Unable to delete song with id: 10' });
+      expect(response.body).toEqual({message: 'Unable to delete song with id: 10' });
     });
   });
 
