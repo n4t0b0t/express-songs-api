@@ -4,6 +4,18 @@ const router = express.Router();
 let songs = [];
 
 //Song API
+router.param('id', (req, res, next, id) => {
+    let song = songs.find(song => song.id === parseInt(id));
+    if (song) {
+      req.song = song;
+      next();
+    } 
+    else 
+    {
+      res.status(404).json({message : "Resource not found"});
+    }
+});
+
 //return list of all songs
 router.get('/', (req, res) => {
     res.status(200).json(songs);
@@ -19,24 +31,22 @@ router.post('/', (req, res) => {
     songs.push(newSong);
     res.status(201).json(newSong);
 });
-
+  
 //return a song with id 
 router.get('/:id', (req, res) => {
-    let song = songs.find(song => song.id == parseInt(req.params.id));
-    res.status(200).json(song);
+    res.status(200).json(req.song);
 });
-
+  
 //edit a song with id, and return edited song
 router.put('/:id', (req, res) => {
-    let song = songs.find(song => song.id === parseInt(req.params.id));
-    song.name = req.body.name;
-    song.artist = req.body.artist;
-    res.status(200).json(song);
+    req.song.name = req.body.name;
+    req.song.artist = req.body.artist;
+    res.status(200).json(req.song);
 });
-
+  
 //delete a song with id, and return deleted song
 router.delete("/:id", (req, res) => {
-    let songToDelete = songs.find(song => song.id === parseInt(req.params.id));
+    let songToDelete = req.song
     let index = songs.indexOf(songToDelete);
     songs.splice(index, 1);
     res.status(200).json(songToDelete);
