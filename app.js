@@ -4,7 +4,6 @@ const app = express();
 const songRouter = require("./routes/songs");
 const movieRouter = require("./routes/movies");
 
-app.use(express.static('client'));
 app.use(express.json())
 
 app.use('/songs', songRouter);
