@@ -5,6 +5,12 @@ const router = express.Router();
 let songs = [];
 
 //Song API
+router.param('id', (req, res, next, id) => {
+    let song = songs.find(song => song.id === parseInt(id));
+    req.song = song;
+    next();
+});
+
 //return list of all songs
 router.get('/', (req, res, next) => {
     res.status(200).json(songs);
@@ -30,19 +36,17 @@ router.post('/', (req, res, next) => {
 
 //return a song with id 
 router.get('/:id', (req, res, next) => {
-    let song = songs.find(song => song.id == parseInt(req.params.id));
-    if(!song){
+    if(!req.song){
         let error = new Error(`Unable to find song with id: ${req.params.id}`)
         error.statusCode = 404
         return next(error)
     }
-    res.status(200).json(song);
+    res.status(200).json(req.song);
 });
 
 //update a song with id, and return edited song
 router.put('/:id', (req, res, next) => {
-    let song = songs.find(song => song.id === parseInt(req.params.id));
-    if(!song){
+    if(!req.song){
         let error = new Error(`Unable to update song with id: ${req.params.id}`)
         error.statusCode = 404
         return next(error)
@@ -55,23 +59,22 @@ router.put('/:id', (req, res, next) => {
         return next(error);
     }
 
-    song.name = req.body.name;
-    song.artist = req.body.artist;
-    res.status(200).json(song);
+    req.song.name = req.body.name;
+    req.song.artist = req.body.artist;
+    res.status(200).json(req.song);
 });
 
 //delete a song with id, and return deleted song
 router.delete("/:id", (req, res, next) => {
-    let songToDelete = songs.find(song => song.id === parseInt(req.params.id));
-    if(!songToDelete){
+    if(!req.song){
         let error = new Error(`Unable to delete song with id: ${req.params.id}`)
         error.statusCode = 404
         return next(error)
     }
     
-    let index = songs.indexOf(songToDelete);
+    let index = songs.indexOf(req.song);
     songs.splice(index, 1);
-    res.status(200).json(songToDelete);
+    res.status(200).json(req.song);
 });
 
 //Add error handler for songs router to return error on failure at any route
