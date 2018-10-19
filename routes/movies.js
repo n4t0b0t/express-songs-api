@@ -28,7 +28,6 @@ router.get('/:id', (req, res) => {
   
 //edit a movie with id, and return edited movie
 router.put('/:id', (req, res) => {
-    console.log(req.params.id)
     let movie = movies.find(movie => movie.id === parseInt(req.params.id));
     movie.name = req.body.name;
     movie.artist = req.body.artist;
