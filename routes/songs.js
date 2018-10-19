@@ -3,6 +3,67 @@ const express = require('express');
 const router = express.Router();
 
 let songs = [];
+const DELAY = 10
+
+//Integrate below methods in the route handlers with async and await
+const getSongs = () => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(songs);
+          }, DELAY);
+    });
+}
+
+const createSong = (requestBody) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            let newSong = {
+                id: songs.length + 1,
+                name: requestBody.name,
+                artist: requestBody.artist 
+            }
+
+            songs.push(newSong);
+            resolve(newSong)
+        }, DELAY);
+    });
+}
+
+const getSong = (id) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            let songFound = songs.find(song => song.id == parseInt(id));
+            if (!songFound){
+                reject(new Error(`Unable to find song with id: ${id}`))
+            }
+            return resolve(songFound);
+        }, DELAY);
+    })
+}
+
+const updateSong = (requestBody, songToUpdate) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            songToUpdate.name = requestBody.name;
+            songToUpdate.artist = requestBody.artist;
+            resolve(songToUpdate)
+        }, DELAY);
+    });
+}
+
+const deleteSong = (songToDelete) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if(!songToDelete) {
+                reject(new Error())
+            }
+
+            let index = songs.indexOf(songToDelete);
+            songs.splice(index, 1);
+            resolve(songToDelete);
+        }, DELAY)
+    })
+}
 
 //Song API
 router.param('id', (req, res, next, id) => {
