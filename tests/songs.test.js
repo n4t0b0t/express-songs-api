@@ -14,8 +14,13 @@ describe("routes/songs", () => {
    
 
   });
+
+  it("GET /songs/:id should return song with id specified", () => {
+   
+
+  });
   
-  it("PUT /songs should return the updated song", () => {
+  it("PUT /songs/:id should return the updated song", () => {
     
 
   });
