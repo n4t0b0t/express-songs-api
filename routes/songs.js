@@ -1,4 +1,4 @@
-const Joi = require('Joi');
+const Joi = require('joi');
 const express = require('express');
 const router = express.Router();
 
@@ -7,6 +7,11 @@ let songs = [];
 //Song API
 router.param('id', (req, res, next, id) => {
     let song = songs.find(song => song.id === parseInt(id));
+    if(!song){
+        const error = new Error(`Unable to find song with id: ${id}`);
+        error.statusCode = 404;
+        return next(error)
+    }
     req.song = song;
     next();
 });
@@ -36,22 +41,11 @@ router.post('/', (req, res, next) => {
 
 //return a song with id 
 router.get('/:id', (req, res, next) => {
-    if(!req.song){
-        let error = new Error(`Unable to find song with id: ${req.params.id}`)
-        error.statusCode = 404
-        return next(error)
-    }
     res.status(200).json(req.song);
 });
 
 //update a song with id, and return edited song
 router.put('/:id', (req, res, next) => {
-    if(!req.song){
-        let error = new Error(`Unable to update song with id: ${req.params.id}`)
-        error.statusCode = 404
-        return next(error)
-    }
-
     const validation = validateSong(req.body)
     if (validation.error){
         let error = new Error(validation.error.details[0].message)
@@ -66,12 +60,7 @@ router.put('/:id', (req, res, next) => {
 
 //delete a song with id, and return deleted song
 router.delete("/:id", (req, res, next) => {
-    if(!req.song){
-        let error = new Error(`Unable to delete song with id: ${req.params.id}`)
-        error.statusCode = 404
-        return next(error)
-    }
-    
+
     let index = songs.indexOf(req.song);
     songs.splice(index, 1);
     res.status(200).json(req.song);

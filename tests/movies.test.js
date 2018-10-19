@@ -4,8 +4,8 @@ const request = require("supertest");
 describe("routes/movies", () => {
 
   it("POST /movies should return a new movie object", () => {
-    requestBody = { name: "test movie", artist: "rhianna"};
-    responseBody = {id: 1, name: "test movie", artist: "rhianna"};
+    const requestBody = { name: "test movie", artist: "rhianna"};
+    const responseBody = {id: 1, name: "test movie", artist: "rhianna"};
     
     return request(app)
     .post("/movies")
@@ -29,11 +29,10 @@ describe("routes/movies", () => {
   });
 
   it("GET /movies/:id should return the movie with id", () => {
-    responseBody = { id: 1, name: "test movie", artist: "rhianna"};
+    const responseBody = { id: 1, name: "test movie", artist: "rhianna"};
     
     return request(app)
     .get("/movies/1")
-    .send(requestBody)
     
     .then(response => {
       expect(response.status).toEqual(200);
@@ -42,8 +41,8 @@ describe("routes/movies", () => {
   });
   
   it("PUT /movies should return the updated movie", () => {
-    requestBody = { name: "updated movie", artist: "rhianna" };
-    responseBody = { id: 1, name: "updated movie", artist: "rhianna" };
+    const requestBody = { name: "updated movie", artist: "rhianna" };
+    const responseBody = { id: 1, name: "updated movie", artist: "rhianna" };
     
     return request(app)
     .put("/movies/1")
@@ -56,7 +55,7 @@ describe("routes/movies", () => {
   });
 
   it("DELETE /movies/:id should return the deleted movie", () => {
-    responseBody = { id: 1, name: "updated movie", artist: "rhianna" };
+    const responseBody = { id: 1, name: "updated movie", artist: "rhianna" };
 
     return request(app)
     .delete("/movies/1")
