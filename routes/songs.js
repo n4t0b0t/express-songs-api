@@ -8,7 +8,6 @@ router.param('id', (req, res, next, id) => {
     let song = songs.find(song => song.id === parseInt(id));
     if(!song){
         const error = new Error(`Unable to find song with id: ${id}`);
-        error.statusCode = 404;
         return next(error)
     }
     req.song = song;
