@@ -7,14 +7,8 @@ let songs = [];
 
 app.param('id', (req, res, next, id) => {
   let song = songs.find(song => song.id === parseInt(id));
-  if (song) {
-    req.song = song;
-    next();
-  } 
-  else 
-  {
-    res.status(404).json({message : "Resource not found"});
-  }
+  req.song = song;
+  next();
 });
 
 //return list of all songs
