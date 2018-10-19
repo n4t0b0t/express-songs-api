@@ -78,7 +78,7 @@ describe("routes/songs", () => {
     
     .then(response => {
       expect(response.status).toEqual(404);
-      expect(response.body).toEqual({message: 'Unable to update song with id: 10' });
+      expect(response.body).toEqual({message: 'Unable to find song with id: 10' });
     });
   });
 
@@ -100,7 +100,7 @@ describe("routes/songs", () => {
     
     .then(response => {
       expect(response.status).toEqual(404);
-      expect(response.body).toEqual({message: 'Unable to delete song with id: 10' });
+      expect(response.body).toEqual({message: 'Unable to find song with id: 10' });
     });
   });
 
