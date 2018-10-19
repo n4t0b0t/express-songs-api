@@ -6,6 +6,11 @@ let songs = [];
 //Song API
 router.param('id', (req, res, next, id) => {
     let song = songs.find(song => song.id === parseInt(id));
+    if(!song){
+        const error = new Error(`Unable to find song with id: ${id}`);
+        error.statusCode = 404;
+        return next(error)
+    }
     req.song = song;
     next();
 });
@@ -32,19 +37,11 @@ router.post('/', (req, res) => {
 
 //return a song with id 
 router.get('/:id', (req, res, next) => {
-    if(!req.song){
-        return next(new Error(`Unable to find song with id: ${req.params.id}`))
-    }
-
     res.status(200).json(req.song);
 });
 
 //update a song with id, and return edited song
 router.put('/:id', (req, res, next) => {
-    if(!req.song){
-        return next(new Error(`Unable to update song with id: ${req.params.id}`))
-    }
-
     req.song.name = req.body.name;
     req.song.artist = req.body.artist;
     res.status(200).json(req.song);
@@ -52,10 +49,6 @@ router.put('/:id', (req, res, next) => {
 
 //delete a song with id, and return deleted song
 router.delete("/:id", (req, res, next) => {
-    if(!req.song){
-        return next(new Error(`Unable to delete song with id: ${req.params.id}`))
-    }
-
     let index = songs.indexOf(req.song);
     songs.splice(index, 1);
     res.status(200).json(req.song);
